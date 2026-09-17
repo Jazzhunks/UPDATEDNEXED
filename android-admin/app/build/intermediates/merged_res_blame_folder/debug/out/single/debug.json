@@ -1,94 +1,42 @@
 [
     {
-        "merged": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-merged_res-64:/drawable_ic_launcher_foreground.xml.flat",
-        "source": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-main-66:/drawable/ic_launcher_foreground.xml"
+        "merged": "com.northend.admin.app-merged_res-71:/drawable_ic_launcher_background.xml.flat",
+        "source": "com.northend.admin.app-main-73:/drawable/ic_launcher_background.xml"
     },
     {
-        "merged": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-merged_res-64:/mipmap-hdpi_ic_launcher.png.flat",
-        "source": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-main-66:/mipmap-hdpi/ic_launcher.png"
+        "merged": "com.northend.admin.app-merged_res-71:/drawable_splash_background.xml.flat",
+        "source": "com.northend.admin.app-main-73:/drawable/splash_background.xml"
     },
     {
-        "merged": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-merged_res-64:/xml_file_paths.xml.flat",
-        "source": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-main-66:/xml/file_paths.xml"
+        "merged": "com.northend.admin.app-merged_res-71:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "com.northend.admin.app-main-73:/drawable/ic_launcher_foreground.xml"
     },
     {
-        "merged": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-merged_res-64:/xml_backup_rules.xml.flat",
-        "source": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-main-66:/xml/backup_rules.xml"
+        "merged": "com.northend.admin.app-merged_res-71:/xml_file_paths.xml.flat",
+        "source": "com.northend.admin.app-main-73:/xml/file_paths.xml"
     },
     {
-        "merged": "com.northend.admin.app-merged_res-64:/drawable_ic_unacademy_logo.xml.flat",
-        "source": "com.northend.admin.app-main-66:/drawable/ic_unacademy_logo.xml"
+        "merged": "com.northend.admin.app-merged_res-71:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "com.northend.admin.app-main-73:/mipmap-anydpi-v26/ic_launcher_round.xml"
     },
     {
-        "merged": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-merged_res-64:/mipmap-xhdpi_ic_launcher_round.png.flat",
-        "source": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-main-66:/mipmap-xhdpi/ic_launcher_round.png"
+        "merged": "com.northend.admin.app-merged_res-71:/xml_backup_rules.xml.flat",
+        "source": "com.northend.admin.app-main-73:/xml/backup_rules.xml"
     },
     {
-        "merged": "com.northend.admin.app-merged_res-64:/drawable_ic_launcher_background.xml.flat",
-        "source": "com.northend.admin.app-main-66:/drawable/ic_launcher_background.xml"
+        "merged": "com.northend.admin.app-merged_res-71:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.northend.admin.app-main-73:/mipmap-anydpi-v26/ic_launcher.xml"
     },
     {
-        "merged": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-merged_res-64:/xml_data_extraction_rules.xml.flat",
-        "source": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-main-66:/xml/data_extraction_rules.xml"
+        "merged": "com.northend.admin.app-merged_res-71:/xml_network_security_config.xml.flat",
+        "source": "com.northend.admin.app-main-73:/xml/network_security_config.xml"
     },
     {
-        "merged": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-merged_res-64:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
-        "source": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-main-66:/mipmap-anydpi-v26/ic_launcher_round.xml"
+        "merged": "com.northend.admin.app-merged_res-71:/xml_data_extraction_rules.xml.flat",
+        "source": "com.northend.admin.app-main-73:/xml/data_extraction_rules.xml"
     },
     {
-        "merged": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-merged_res-64:/mipmap-xhdpi_ic_launcher.png.flat",
-        "source": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-main-66:/mipmap-xhdpi/ic_launcher.png"
-    },
-    {
-        "merged": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-merged_res-64:/xml_network_security_config.xml.flat",
-        "source": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-main-66:/xml/network_security_config.xml"
-    },
-    {
-        "merged": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-merged_res-64:/mipmap-xxhdpi_ic_launcher_round.png.flat",
-        "source": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-main-66:/mipmap-xxhdpi/ic_launcher_round.png"
-    },
-    {
-        "merged": "com.northend.admin.app-merged_res-64:/drawable_splash_background.xml.flat",
-        "source": "com.northend.admin.app-main-66:/drawable/splash_background.xml"
-    },
-    {
-        "merged": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-merged_res-64:/mipmap-xxhdpi_ic_launcher.png.flat",
-        "source": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-main-66:/mipmap-xxhdpi/ic_launcher.png"
-    },
-    {
-        "merged": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-merged_res-64:/mipmap-xxxhdpi_ic_launcher.png.flat",
-        "source": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-main-66:/mipmap-xxxhdpi/ic_launcher.png"
-    },
-    {
-        "merged": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-merged_res-64:/mipmap-hdpi_ic_launcher_round.png.flat",
-        "source": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-main-66:/mipmap-hdpi/ic_launcher_round.png"
-    },
-    {
-        "merged": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-merged_res-64:/mipmap-anydpi-v26_ic_launcher.xml.flat",
-        "source": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-main-66:/mipmap-anydpi-v26/ic_launcher.xml"
-    },
-    {
-        "merged": "com.northend.admin.app-merged_res-64:/mipmap-anydpi-v26_ic_launcher.xml.flat",
-        "source": "com.northend.admin.app-main-66:/mipmap-anydpi-v26/ic_launcher.xml"
-    },
-    {
-        "merged": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-merged_res-64:/mipmap-mdpi_ic_launcher_round.png.flat",
-        "source": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-main-66:/mipmap-mdpi/ic_launcher_round.png"
-    },
-    {
-        "merged": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-merged_res-64:/mipmap-xxxhdpi_ic_launcher_round.png.flat",
-        "source": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-main-66:/mipmap-xxxhdpi/ic_launcher_round.png"
-    },
-    {
-        "merged": "com.northend.admin.app-merged_res-64:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
-        "source": "com.northend.admin.app-main-66:/mipmap-anydpi-v26/ic_launcher_round.xml"
-    },
-    {
-        "merged": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-merged_res-64:/mipmap-mdpi_ic_launcher.png.flat",
-        "source": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-main-66:/mipmap-mdpi/ic_launcher.png"
-    },
-    {
-        "merged": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-merged_res-64:/drawable_ic_launcher_background.xml.flat",
-        "source": "/Users/mudasirmushtaq/.gradle/daemon/8.14.5/com.northend.admin.app-main-66:/drawable/ic_launcher_background.xml"
+        "merged": "com.northend.admin.app-merged_res-71:/drawable_ic_unacademy_logo.xml.flat",
+        "source": "com.northend.admin.app-main-73:/drawable/ic_unacademy_logo.xml"
     }
 ]

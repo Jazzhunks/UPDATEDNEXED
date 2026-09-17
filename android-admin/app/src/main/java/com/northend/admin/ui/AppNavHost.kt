@@ -1,5 +1,7 @@
 package com.northend.admin.ui
 
+import android.app.Activity
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -25,14 +27,9 @@ import com.northend.admin.di.NetworkModule
 @Composable
 fun AppNavHost() {
     val navController = rememberNavController()
-    var startDestination by remember { mutableStateOf("login") }
-
     val context = LocalContext.current
     val tokenManager = remember { NetworkModule.provideTokenManager(context) }
-
-    LaunchedEffect(Unit) {
-        startDestination = if (tokenManager.isLoggedIn()) "erp" else "login"
-    }
+    val startDestination = remember { if (tokenManager.isLoggedIn()) "erp" else "login" }
 
     NavHost(navController = navController, startDestination = startDestination) {
         composable("login") {
@@ -44,11 +41,19 @@ fun AppNavHost() {
             })
         }
         composable("erp") {
-            com.northend.admin.ui.erp.WhatsAppInboxScreen(
+            val activity = LocalContext.current as? Activity
+            BackHandler {
+                activity?.moveTaskToBack(true)
+            }
+            val dashboardViewModel: DashboardViewModel = hiltViewModel()
+            val user by dashboardViewModel.user.collectAsStateWithLifecycle()
+            val currentUser = user ?: User(id = "", name = "", email = "", role = "attendance")
+            ErpScreen(
+                user = currentUser,
                 onLogout = {
                     tokenManager.clearTokens()
                     navController.navigate("login") {
-                        popUpTo(0) { inclusive = true }
+                        popUpTo("erp") { inclusive = true }
                     }
                 }
             )

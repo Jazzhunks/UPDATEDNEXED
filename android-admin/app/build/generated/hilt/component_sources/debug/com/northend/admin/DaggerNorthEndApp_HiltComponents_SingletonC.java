@@ -548,7 +548,7 @@ public final class DaggerNorthEndApp_HiltComponents_SingletonC {
           return (T) new StudentsViewModel(singletonCImpl.provideAdminRepositoryProvider.get());
 
           case 11: // com.northend.admin.ui.erp.WhatsAppViewModel 
-          return (T) new WhatsAppViewModel(singletonCImpl.provideAdminRepositoryProvider.get());
+          return (T) new WhatsAppViewModel(singletonCImpl.provideAdminRepositoryProvider.get(), ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
           default: throw new AssertionError(id);
         }
@@ -659,7 +659,7 @@ public final class DaggerNorthEndApp_HiltComponents_SingletonC {
     }
 
     @Override
-    public void injectNorthEndApp(NorthEndApp northEndApp) {
+    public void injectNorthEndApp(NorthEndApp arg0) {
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.northend.admin.ui.erp
 
+import android.app.Activity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -30,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.northend.admin.data.remote.models.WhatsAppMessage
 import com.northend.admin.data.remote.models.WhatsAppThread
+import androidx.activity.compose.BackHandler
 
 val WhatsAppTeal = Color(0xFF075E54)
 val WhatsAppLightGreen = Color(0xFF25D366)
@@ -71,7 +73,7 @@ fun WhatsAppInboxScreen(viewModel: WhatsAppViewModel = hiltViewModel(), onLogout
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
             if (state.currentThread == null) {
-
+                
         // THREAD LIST
         Scaffold(
             modifier = Modifier.imePadding().systemBarsPadding(),
@@ -116,6 +118,9 @@ fun WhatsAppInboxScreen(viewModel: WhatsAppViewModel = hiltViewModel(), onLogout
         }
     } else {
         // CHAT SCREEN
+        BackHandler {
+            viewModel.deselectThread()
+        }
         ChatScreen(
             viewModel = viewModel,
             thread = state.currentThread!!,

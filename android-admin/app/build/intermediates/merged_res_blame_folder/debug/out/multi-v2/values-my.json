@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.northend.admin.app-mergeDebugResources-62:/values-my/values-my.xml",
+            "outputFile": "com.northend.admin.app-mergeDebugResources-69:/values-my/values-my.xml",
             "map": [
                 {
                     "source": "/Users/mudasirmushtaq/.gradle/caches/8.14.5/transforms/084f3cc1a2c412a744b6ca937e6870ec/transformed/ui-release/res/values-my/values-my.xml",

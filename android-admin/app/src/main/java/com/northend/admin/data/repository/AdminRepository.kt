@@ -18,6 +18,7 @@ import com.northend.admin.domain.model.DashboardBranchResponse
 import com.northend.admin.domain.model.MetaResponse
 import com.northend.admin.domain.model.User
 import com.northend.admin.utils.ResultWrapper
+import android.os.Build
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -150,6 +151,16 @@ class AdminRepository @Inject constructor(
         apiService.logout()
         tokenManager.clearTokens()
     }
+
+    suspend fun registerFcmToken(token: String, platform: String): ResultWrapper<Unit> =
+        safeApiCall {
+            val body = mapOf(
+                "token" to token,
+                "platform" to platform,
+                "user_agent" to android.os.Build.MODEL + " / " + android.os.Build.VERSION.RELEASE
+            )
+            apiService.registerFcmToken(body)
+        }
 
     private suspend fun <T> safeApiCall(apiCall: suspend () -> T): ResultWrapper<T> = withContext(Dispatchers.IO) {
         try {

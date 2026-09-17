@@ -5,7 +5,7 @@ import "@/index.css";
 import App from "@/App";
 
 if ("serviceWorker" in navigator) {
-  const swUrl = "/service-worker.js";
+  const swUrl = "/firebase-messaging-sw.js";
   navigator.serviceWorker.register(swUrl).catch((err) => {
     console.warn("Service worker registration failed:", err);
   });

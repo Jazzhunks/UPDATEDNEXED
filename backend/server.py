@@ -68,6 +68,7 @@ from notifications import (
     emit_broadcast_complete,
 )
 from onesignal_client import notify_admins, notify_students, send_onesignal_notification
+from fcm_client import send_fcm_to_token, send_fcm_to_topic, send_fcm_to_tokens
 
 
 # ---------- Constants & Helpers ----------
@@ -3065,6 +3066,32 @@ async def contact(payload: ContactIn, request: Request):
 async def list_inquiries(_admin = Depends(require_admin)):
     return await db.inquiries.find({}, {"_id": 0}).sort("created_at", -1).to_list(500)
 
+
+@api.post("/admin/fcm-token")
+async def register_fcm_token(payload: Dict[str, Any]):
+    token = payload.get("token")
+    platform = payload.get("platform", "web")
+    user_agent = payload.get("user_agent")
+
+    if not token:
+        raise HTTPException(400, "token is required")
+
+    doc = {
+        "token": token,
+        "platform": platform,
+        "user_agent": user_agent,
+        "last_seen": now_iso(),
+    }
+
+    await db.fcm_tokens.update_one(
+        {"token": token},
+        {"$set": doc, "$setOnInsert": {"created_at": now_iso()}},
+        upsert=True,
+    )
+
+    return {"ok": True}
+
+
 @api.post("/admin/push-notifications")
 async def send_push_notification(payload: PushNotificationIn, _admin = Depends(require_admin)):
     target_map = {
@@ -3072,7 +3099,7 @@ async def send_push_notification(payload: PushNotificationIn, _admin = Depends(r
         "admin": [{"field": "tag", "key": "role", "value": "admin"}],
         "student": [{"field": "tag", "key": "role", "value": "student"}],
     }
-    result = await send_onesignal_notification(
+    onesignal_result = await send_onesignal_notification(
         headings={"en": payload.title},
         contents={"en": payload.message},
         filters=target_map.get(payload.target),
@@ -3081,7 +3108,23 @@ async def send_push_notification(payload: PushNotificationIn, _admin = Depends(r
         image=payload.image,
         name="admin_push_" + uuid.uuid4().hex[:8],
     )
-    return {"ok": True, "result": result}
+
+    fcm_result = {"skipped": True}
+    try:
+        cursor = db.fcm_tokens.find({}, {"_id": 0, "token": 1}).limit(1000)
+        tokens = [doc["token"] async for doc in cursor]
+        if tokens:
+            fcm_result = await send_fcm_to_tokens(
+                tokens,
+                payload.title,
+                payload.message,
+                data={"source": "admin_dashboard", "target": payload.target},
+                url=payload.url,
+            )
+    except Exception as e:
+        logging.error("FCM send failed: %s", e)
+
+    return {"ok": True, "onesignal": onesignal_result, "fcm": fcm_result}
 
 # ---------- Admin Dashboard summary ----------
 

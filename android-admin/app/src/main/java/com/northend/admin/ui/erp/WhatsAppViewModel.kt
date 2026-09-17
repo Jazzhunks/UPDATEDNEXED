@@ -7,6 +7,17 @@ import com.northend.admin.data.remote.models.WhatsAppThread
 import com.northend.admin.data.repository.AdminRepository
 import com.northend.admin.utils.ResultWrapper
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import android.content.Context
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Intent
+import android.media.RingtoneManager
+import android.os.Build
+import androidx.core.app.NotificationCompat
+import com.northend.admin.R
+import com.northend.admin.ui.MainActivity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,7 +38,8 @@ data class WhatsAppUiState(
 
 @HiltViewModel
 class WhatsAppViewModel @Inject constructor(
-    private val repository: AdminRepository
+    private val repository: AdminRepository,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(WhatsAppUiState())
@@ -58,9 +70,10 @@ class WhatsAppViewModel @Inject constructor(
                         if (topThread != null) {
                             if (lastTopThreadId != null && (topThread.id != lastTopThreadId || topThread.lastMessagePreview != lastMessagePreview)) {
                                 if (topThread.id != _uiState.value.currentThread?.id) {
-                                    // It's a new message in a DIFFERENT thread!
-                                    // We can trigger an event or just show a local notification via an injected context, 
-                                    // but we can also just expose an event flow.
+                                    // Post a REAL system notification!
+                                    val sender = topThread.contactName ?: topThread.studentName ?: topThread.phone ?: "WhatsApp"
+                                    val preview = topThread.lastMessagePreview ?: "New message"
+                                    showSystemNotification(sender, preview)
                                 }
                             }
                             lastTopThreadId = topThread.id
@@ -163,5 +176,48 @@ class WhatsAppViewModel @Inject constructor(
                 else -> {}
             }
         }
+    }
+
+    private fun showSystemNotification(title: String, message: String) {
+        val channelId = "northend_notifications"
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                channelId,
+                "NorthEnd Admin Alerts",
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                enableVibration(true)
+                enableLights(true)
+            }
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        val intent = Intent(context, MainActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        }
+
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            System.currentTimeMillis().toInt(),
+            intent,
+            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+
+        val notification = NotificationCompat.Builder(context, channelId)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setContentTitle(title)
+            .setContentText(message)
+            .setAutoCancel(true)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setDefaults(NotificationCompat.DEFAULT_ALL)
+            .setSound(soundUri)
+            .setContentIntent(pendingIntent)
+            .build()
+
+        notificationManager.notify(System.currentTimeMillis().toInt(), notification)
     }
 }

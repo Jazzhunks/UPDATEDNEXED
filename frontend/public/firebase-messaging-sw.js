@@ -45,3 +45,108 @@ self.addEventListener('notificationclick', function(event) {
     })
   );
 });
+
+const CACHE_NAME = "northend-static-v2";
+const RUNTIME_CACHE = "northend-runtime-v2";
+const PRECACHE_URLS = [
+  "/",
+  "/index.html",
+  "/login",
+  "/manifest.json",
+  "/icons/icon-192.png",
+  "/icons/icon-512.png",
+  "/icons/icon-maskable-512.png",
+];
+
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(PRECACHE_URLS))
+  );
+  self.skipWaiting();
+});
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(
+        keys
+          .filter((key) => key !== CACHE_NAME && key !== RUNTIME_CACHE)
+          .map((key) => caches.delete(key))
+      )
+    )
+  );
+  self.clients.claim();
+});
+
+self.addEventListener("fetch", (event) => {
+  const { request } = event;
+  const url = new URL(request.url);
+
+  if (request.method !== "GET") {
+    return;
+  }
+
+  if (
+    url.pathname.startsWith("/api/") ||
+    url.pathname.startsWith("/erp/stream") ||
+    url.pathname.startsWith("/push/")
+  ) {
+    return;
+  }
+
+  const isNavigation =
+    request.mode === "navigate" ||
+    (request.headers.get("accept") && request.headers.get("accept").includes("text/html"));
+
+  if (isNavigation) {
+    event.respondWith(
+      fetch(request)
+        .then(async (response) => {
+          if (!response || response.status === 404) {
+            const cached =
+              (await caches.match("/index.html")) || (await caches.match("/"));
+            if (cached) return cached;
+          }
+          return response;
+        })
+        .catch(async () => {
+          const cached =
+            (await caches.match("/index.html")) || (await caches.match("/"));
+          return (
+            cached ||
+            new Response(
+              "<!DOCTYPE html><html><head><meta http-equiv='refresh' content='0;url=/'></head><body>Redirecting to application...</body></html>",
+              {
+                status: 200,
+                headers: { "Content-Type": "text/html" },
+              }
+            )
+          );
+        })
+    );
+    return;
+  }
+
+  if (url.origin === self.location.origin) {
+    event.respondWith(
+      caches.match(request).then((cached) => {
+        if (cached) return cached;
+        return fetch(request)
+          .then((response) => {
+            if (response && response.status === 200) {
+              const clone = response.clone();
+              caches.open(RUNTIME_CACHE).then((cache) => cache.put(request, clone).catch(() => {}));
+            }
+            return response;
+          })
+          .catch(() => {
+            return new Response("Asset unavailable offline", {
+              status: 404,
+              headers: { "Content-Type": "text/plain" },
+            });
+          })
+      })
+    );
+    return;
+  }
+});

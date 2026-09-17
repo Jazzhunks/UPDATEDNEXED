@@ -216,6 +216,9 @@ interface AdminApiService {
 
     @GET("erp/exports/students.xlsx")
     suspend fun exportStudents(@Query("branch_id") branchId: String? = null): Response<okhttp3.ResponseBody>
+
+    @POST("admin/fcm-token")
+    suspend fun registerFcmToken(@Body body: Map<String, Any>): Response<Unit>
 }
 
 @JsonClass(generateAdapter = true)
