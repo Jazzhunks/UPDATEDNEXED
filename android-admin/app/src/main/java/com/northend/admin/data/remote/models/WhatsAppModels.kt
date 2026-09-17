@@ -16,12 +16,12 @@ data class WhatsAppThread(
 
 data class WhatsAppMessage(
     val id: String,
-    @Json(name = "thread_id") val threadId: String,
-    val direction: String, // "inbound" or "outbound"
-    @Json(name = "type") val kind: String, // "text", "template", "image", etc.
+    @Json(name = "thread_id") val threadId: String? = null,
+    val direction: String? = "inbound", // "inbound" or "outbound"
+    @Json(name = "type") val kind: String? = "text", // "text", "template", "image", etc.
     val text: String? = null,
     val status: String? = null, // "sent", "delivered", "read", "failed"
-    @Json(name = "created_at") val timestamp: String
+    @Json(name = "created_at") val timestamp: String? = null
 )
 
 data class WhatsAppSendMessageRequest(

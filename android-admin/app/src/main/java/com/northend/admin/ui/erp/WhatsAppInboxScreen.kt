@@ -36,10 +36,28 @@ val WhatsAppOutgoing = Color(0xFFDCF8C6)
 fun WhatsAppInboxScreen(viewModel: WhatsAppViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsState()
     var showNewChatDialog by remember { mutableStateOf(false) }
+    val context = androidx.compose.ui.platform.LocalContext.current
+    var lastTopThreadId by remember { mutableStateOf<String?>(null) }
+    var lastPreview by remember { mutableStateOf<String?>(null) }
+    
+    LaunchedEffect(state.threads) {
+        val topThread = state.threads.firstOrNull()
+        if (topThread != null) {
+            if (lastTopThreadId != null && (topThread.id != lastTopThreadId || topThread.lastMessagePreview != lastPreview)) {
+                if (topThread.id != state.currentThread?.id) {
+                    android.widget.Toast.makeText(context, "New message from ${topThread.contactName ?: topThread.phone}", android.widget.Toast.LENGTH_LONG).show()
+                }
+            }
+            lastTopThreadId = topThread.id
+            lastPreview = topThread.lastMessagePreview
+        }
+    }
+
 
     if (state.currentThread == null) {
         // THREAD LIST
         Scaffold(
+            modifier = Modifier.imePadding().systemBarsPadding(),
             topBar = {
                 TopAppBar(
                     title = { Text("WhatsApp", color = Color.White, fontWeight = FontWeight.SemiBold) },
@@ -177,6 +195,7 @@ fun ChatScreen(
     var text by remember { mutableStateOf("") }
     
     Scaffold(
+        modifier = Modifier.imePadding().systemBarsPadding(),
         topBar = {
             TopAppBar(
                 title = { 

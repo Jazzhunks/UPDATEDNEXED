@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 data class WhatsAppUiState(
@@ -31,10 +33,56 @@ class WhatsAppViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(WhatsAppUiState())
     val uiState: StateFlow<WhatsAppUiState> = _uiState.asStateFlow()
 
+    
+    private var lastTopThreadId: String? = null
+    private var lastMessagePreview: String? = null
+
     init {
         loadThreads()
         loadTemplates()
+        startPolling()
     }
+
+    private fun startPolling() {
+        viewModelScope.launch {
+            while(isActive) {
+                kotlinx.coroutines.delay(3000)
+                // 1. Poll Threads
+                when (val res = repository.listWhatsAppThreads()) {
+                    is ResultWrapper.Success -> {
+                        val newThreads = res.data
+                        _uiState.value = _uiState.value.copy(threads = newThreads)
+                        
+                        // Check for new messages in OTHER threads for local notification
+                        val topThread = newThreads.firstOrNull()
+                        if (topThread != null) {
+                            if (lastTopThreadId != null && (topThread.id != lastTopThreadId || topThread.lastMessagePreview != lastMessagePreview)) {
+                                if (topThread.id != _uiState.value.currentThread?.id) {
+                                    // It's a new message in a DIFFERENT thread!
+                                    // We can trigger an event or just show a local notification via an injected context, 
+                                    // but we can also just expose an event flow.
+                                }
+                            }
+                            lastTopThreadId = topThread.id
+                            lastMessagePreview = topThread.lastMessagePreview
+                        }
+                    }
+                    else -> {}
+                }
+                
+                // 2. Poll Messages
+                _uiState.value.currentThread?.let { thread ->
+                    when (val res = repository.getWhatsAppMessages(thread.id)) {
+                        is ResultWrapper.Success -> {
+                            _uiState.value = _uiState.value.copy(messages = res.data)
+                        }
+                        else -> {}
+                    }
+                }
+            }
+        }
+    }
+
 
     
     fun loadTemplates() {
