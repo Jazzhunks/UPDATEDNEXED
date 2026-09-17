@@ -45,14 +45,14 @@ fun WhatsAppInboxScreen(viewModel: WhatsAppViewModel = hiltViewModel(), onLogout
     var lastTopThreadId by remember { mutableStateOf<String?>(null) }
     var lastPreview by remember { mutableStateOf<String?>(null) }
     
-    var topNotification by remember { mutableStateOf<String?>(null) }
+    var topNotificationThread by remember { mutableStateOf<com.northend.admin.data.remote.models.WhatsAppThread?>(null) }
     
     LaunchedEffect(state.threads) {
         val topThread = state.threads.firstOrNull()
         if (topThread != null) {
             if (lastTopThreadId != null && (topThread.id != lastTopThreadId || topThread.lastMessagePreview != lastPreview)) {
                 if (topThread.id != state.currentThread?.id) {
-                    topNotification = "New message from ${topThread.contactName ?: topThread.phone}"
+                    topNotificationThread = topThread
                 }
             }
             lastTopThreadId = topThread.id
@@ -60,10 +60,10 @@ fun WhatsAppInboxScreen(viewModel: WhatsAppViewModel = hiltViewModel(), onLogout
         }
     }
 
-    LaunchedEffect(topNotification) {
-        if (topNotification != null) {
+    LaunchedEffect(topNotificationThread) {
+        if (topNotificationThread != null) {
             delay(3000)
-            topNotification = null
+            topNotificationThread = null
         }
     }
 
@@ -130,7 +130,7 @@ fun WhatsAppInboxScreen(viewModel: WhatsAppViewModel = hiltViewModel(), onLogout
 
         // Custom Top Notification Banner
         AnimatedVisibility(
-            visible = topNotification != null,
+            visible = topNotificationThread != null,
             enter = slideInVertically(initialOffsetY = { -it }),
             exit = slideOutVertically(targetOffsetY = { -it }),
             modifier = Modifier.align(Alignment.TopCenter).padding(top = 40.dp).padding(horizontal = 16.dp)
@@ -139,10 +139,15 @@ fun WhatsAppInboxScreen(viewModel: WhatsAppViewModel = hiltViewModel(), onLogout
                 color = WhatsAppTeal,
                 shape = RoundedCornerShape(8.dp),
                 shadowElevation = 8.dp,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().clickable {
+                    topNotificationThread?.let {
+                        viewModel.selectThread(it)
+                        topNotificationThread = null
+                    }
+                }
             ) {
                 Text(
-                    text = topNotification ?: "",
+                    text = "New message from ${topNotificationThread?.contactName ?: topNotificationThread?.phone}",
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(16.dp)
@@ -229,9 +234,24 @@ fun ThreadItem(thread: WhatsAppThread, onClick: () -> Unit) {
             Text(
                 text = thread.lastMessagePreview ?: "",
                 fontSize = 14.sp,
-                color = Color.Gray,
+                color = if (thread.unreadCount > 0) Color.Black else Color.Gray,
+                fontWeight = if (thread.unreadCount > 0) FontWeight.Bold else FontWeight.Normal,
                 maxLines = 1
             )
+        }
+        if (thread.unreadCount > 0) {
+            Spacer(modifier = Modifier.width(8.dp))
+            Box(
+                modifier = Modifier.size(24.dp).clip(CircleShape).background(WhatsAppLightGreen),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = thread.unreadCount.toString(),
+                    color = Color.White,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
     }
 }
