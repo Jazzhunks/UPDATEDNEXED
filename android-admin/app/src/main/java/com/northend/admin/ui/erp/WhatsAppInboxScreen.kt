@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Message
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.filled.List
@@ -37,7 +38,7 @@ val WhatsAppOutgoing = Color(0xFFDCF8C6)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WhatsAppInboxScreen(viewModel: WhatsAppViewModel = hiltViewModel()) {
+fun WhatsAppInboxScreen(viewModel: WhatsAppViewModel = hiltViewModel(), onLogout: () -> Unit = {}) {
     val state by viewModel.uiState.collectAsState()
     var showNewChatDialog by remember { mutableStateOf(false) }
     val context = androidx.compose.ui.platform.LocalContext.current
@@ -77,7 +78,12 @@ fun WhatsAppInboxScreen(viewModel: WhatsAppViewModel = hiltViewModel()) {
             topBar = {
                 TopAppBar(
                     title = { Text("WhatsApp", color = Color.White, fontWeight = FontWeight.SemiBold) },
-                    colors = TopAppBarDefaults.topAppBarColors(containerColor = WhatsAppTeal)
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = WhatsAppTeal),
+                    actions = {
+                        IconButton(onClick = onLogout) {
+                            Icon(androidx.compose.material.icons.Icons.Filled.ExitToApp, "Logout", tint = Color.White)
+                        }
+                    }
                 )
             },
             floatingActionButton = {

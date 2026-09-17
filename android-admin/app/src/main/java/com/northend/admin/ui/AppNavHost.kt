@@ -19,6 +19,7 @@ import com.northend.admin.ui.auth.LoginScreen
 import com.northend.admin.ui.auth.LoginViewModel
 import com.northend.admin.ui.erp.DashboardViewModel
 import com.northend.admin.ui.erp.ErpScreen
+import com.northend.admin.ui.erp.WhatsAppInboxScreen
 import com.northend.admin.di.NetworkModule
 
 @Composable
@@ -43,15 +44,11 @@ fun AppNavHost() {
             })
         }
         composable("erp") {
-            val dashboardViewModel: DashboardViewModel = androidx.hilt.navigation.compose.hiltViewModel()
-            val user by dashboardViewModel.user.collectAsStateWithLifecycle()
-            val currentUser = user ?: User(id = "", name = "", email = "", role = "attendance")
-            ErpScreen(
-                user = currentUser,
+            com.northend.admin.ui.erp.WhatsAppInboxScreen(
                 onLogout = {
                     tokenManager.clearTokens()
                     navController.navigate("login") {
-                        popUpTo("erp") { inclusive = true }
+                        popUpTo(0) { inclusive = true }
                     }
                 }
             )
