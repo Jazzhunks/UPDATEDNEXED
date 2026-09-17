@@ -1,23 +1,7 @@
-package com.northend.admin.ui
+with open('/Users/mudasirmushtaq/Documents/app/northend/android-admin/app/src/main/java/com/northend/admin/ui/MainActivity.kt', 'r') as f:
+    main = f.read()
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.ui.Modifier
-import androidx.core.view.WindowCompat
-import com.northend.admin.ui.erp.WhatsAppInboxScreen
-import com.northend.admin.ui.theme.NorthEndTheme
-import dagger.hilt.android.AndroidEntryPoint
-
-@AndroidEntryPoint
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-
+crash_code = """
         val prefs = getSharedPreferences("crash_prefs", android.content.Context.MODE_PRIVATE)
         val lastCrash = prefs.getString("last_crash", null)
         if (lastCrash != null) {
@@ -40,17 +24,9 @@ class MainActivity : ComponentActivity() {
                 .commit()
             defaultHandler?.uncaughtException(thread, exception)
         }
+"""
 
-        
-        setContent {
-            NorthEndTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    AppNavHost()
-                }
-            }
-        }
-    }
-}
+main = main.replace('WindowCompat.setDecorFitsSystemWindows(window, false)', 'WindowCompat.setDecorFitsSystemWindows(window, false)\n' + crash_code)
+
+with open('/Users/mudasirmushtaq/Documents/app/northend/android-admin/app/src/main/java/com/northend/admin/ui/MainActivity.kt', 'w') as f:
+    f.write(main)

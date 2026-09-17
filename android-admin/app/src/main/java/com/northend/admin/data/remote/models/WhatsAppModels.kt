@@ -36,4 +36,4 @@ data class WhatsAppTemplate(val name: String, val language: String, val category
 data class WhatsAppTemplateListResponse(val data: List<WhatsAppTemplate>)
 
 
-data class WhatsAppMessagesResponse(val thread: WhatsAppThread?, val contact: Any?, val items: List<WhatsAppMessage>)
+data class WhatsAppMessagesResponse(val thread: WhatsAppThread?, val items: List<WhatsAppMessage>)

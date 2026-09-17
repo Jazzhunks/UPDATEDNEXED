@@ -115,7 +115,7 @@ class AdminRepository @Inject constructor(
         safeApiCall { apiService.listWhatsAppThreads().body()!! }
 
     suspend fun getWhatsAppMessages(threadId: String): ResultWrapper<List<com.northend.admin.data.remote.models.WhatsAppMessage>> {
-        return safeApiCall { apiService.getWhatsAppMessages(threadId) }.let {
+        return safeApiCall { apiService.getWhatsAppMessages(threadId).body()!! }.let {
             when (it) {
                 is ResultWrapper.Success<*> -> ResultWrapper.Success((it.data as com.northend.admin.data.remote.models.WhatsAppMessagesResponse).items)
                 is ResultWrapper.Error -> it
