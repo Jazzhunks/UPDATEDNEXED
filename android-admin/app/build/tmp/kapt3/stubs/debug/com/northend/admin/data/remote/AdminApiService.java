@@ -54,7 +54,7 @@ public abstract interface AdminApiService {
     
     @retrofit2.http.GET(value = "whatsapp/threads/{id}/messages")
     @org.jetbrains.annotations.Nullable()
-    public abstract java.lang.Object getWhatsAppMessages(@retrofit2.http.Path(value = "id")
+    public abstract java.lang.Object getWhatsAppMessages(@retrofit2.http.Path(value = "thread_id")
     @org.jetbrains.annotations.NotNull()
     java.lang.String threadId, @retrofit2.http.Query(value = "limit")
     int limit, @org.jetbrains.annotations.NotNull()
@@ -74,7 +74,7 @@ public abstract interface AdminApiService {
     
     @retrofit2.http.POST(value = "whatsapp/threads/{thread_id}/messages")
     @org.jetbrains.annotations.Nullable()
-    public abstract java.lang.Object sendWhatsAppMessage(@retrofit2.http.Path(value = "id")
+    public abstract java.lang.Object sendWhatsAppMessage(@retrofit2.http.Path(value = "thread_id")
     @org.jetbrains.annotations.NotNull()
     java.lang.String threadId, @retrofit2.http.Body()
     @org.jetbrains.annotations.NotNull()
