@@ -34,3 +34,6 @@ data class SendDirectRequest(val phone: String, val template_name: String, val t
 
 data class WhatsAppTemplate(val name: String, val language: String, val category: String? = null)
 data class WhatsAppTemplateListResponse(val data: List<WhatsAppTemplate>)
+
+
+data class WhatsAppMessagesResponse(val thread: WhatsAppThread?, val contact: Any?, val items: List<WhatsAppMessage>)

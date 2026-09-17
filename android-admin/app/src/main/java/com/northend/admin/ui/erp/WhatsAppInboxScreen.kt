@@ -90,6 +90,11 @@ fun WhatsAppInboxScreen(viewModel: WhatsAppViewModel = hiltViewModel()) {
                 }
             }
         ) { padding ->
+            
+            if (state.error != null) {
+                Text(text = "ERROR: ${state.error}", color = Color.Red, modifier = Modifier.padding(16.dp).background(Color.White))
+            }
+
             if (state.isLoadingThreads) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator(color = WhatsAppTeal)

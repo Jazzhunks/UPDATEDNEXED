@@ -37,7 +37,7 @@ interface AdminApiService {
     suspend fun listWhatsAppThreads(@Query("limit") limit: Int = 100): retrofit2.Response<List<com.northend.admin.data.remote.models.WhatsAppThread>>
 
     @GET("whatsapp/threads/{id}/messages")
-    suspend fun getWhatsAppMessages(@Path("id") threadId: String, @Query("limit") limit: Int = 200): retrofit2.Response<List<com.northend.admin.data.remote.models.WhatsAppMessage>>
+    suspend fun getWhatsAppMessages(@Path("id") threadId: String, @Query("limit") limit: Int = 200): retrofit2.Response<com.northend.admin.data.remote.models.WhatsAppMessagesResponse>
 
     @POST("whatsapp/send-direct")
     @GET("whatsapp/templates")
