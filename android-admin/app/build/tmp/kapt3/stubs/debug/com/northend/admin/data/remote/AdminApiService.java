@@ -52,7 +52,7 @@ public abstract interface AdminApiService {
     int limit, @org.jetbrains.annotations.NotNull()
     kotlin.coroutines.Continuation<? super retrofit2.Response<java.util.List<com.northend.admin.data.remote.models.WhatsAppThread>>> $completion);
     
-    @retrofit2.http.GET(value = "whatsapp/threads/{id}/messages")
+    @retrofit2.http.GET(value = "whatsapp/threads/{thread_id}/messages")
     @org.jetbrains.annotations.Nullable()
     public abstract java.lang.Object getWhatsAppMessages(@retrofit2.http.Path(value = "thread_id")
     @org.jetbrains.annotations.NotNull()
