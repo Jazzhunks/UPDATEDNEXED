@@ -19,6 +19,7 @@ data class WhatsAppUiState(
     val error: String? = null,
     val threads: List<WhatsAppThread> = emptyList(),
     val currentThread: WhatsAppThread? = null,
+    val templates: List<com.northend.admin.data.remote.models.WhatsAppTemplate> = emptyList(),
     val messages: List<WhatsAppMessage> = emptyList()
 )
 
@@ -32,6 +33,17 @@ class WhatsAppViewModel @Inject constructor(
 
     init {
         loadThreads()
+        loadTemplates()
+    }
+
+    
+    fun loadTemplates() {
+        viewModelScope.launch {
+            when (val res = repository.getWhatsAppTemplates()) {
+                is ResultWrapper.Success -> _uiState.value = _uiState.value.copy(templates = res.data)
+                else -> {}
+            }
+        }
     }
 
     fun loadThreads() {
@@ -59,6 +71,36 @@ class WhatsAppViewModel @Inject constructor(
     fun deselectThread() {
         _uiState.value = _uiState.value.copy(currentThread = null, messages = emptyList())
         loadThreads()
+        loadTemplates()
+    }
+
+    
+    fun startNewChat(phone: String, templateName: String = "result_notification") {
+        viewModelScope.launch {
+            when (val res = repository.sendDirectWhatsApp(phone, templateName)) {
+                is ResultWrapper.Success -> {
+                    loadThreads() // Reload to get the new thread in the list
+                }
+                is ResultWrapper.Error -> _uiState.value = _uiState.value.copy(error = res.message)
+                else -> {}
+            }
+        }
+    }
+
+    
+    fun sendTemplateMessage(templateName: String) {
+        val threadId = _uiState.value.currentThread?.id ?: return
+        viewModelScope.launch {
+            // Re-use sendDirectWhatsApp logic, but wait, sendDirect takes a phone number.
+            // If we are in a thread, we can use a new endpoint or just send a normal message with kind="template" if backend supports it.
+            // But wait, the backend `send_message` ONLY accepts kind="text".
+            // Let's use `sendDirectWhatsApp` by passing the thread's phone number!
+            val phone = _uiState.value.currentThread?.phone ?: return@launch
+            when (val res = repository.sendDirectWhatsApp(phone, templateName)) {
+                is ResultWrapper.Success -> selectThread(_uiState.value.currentThread!!) // reload messages
+                else -> {}
+            }
+        }
     }
 
     fun sendMessage(text: String) {

@@ -18,13 +18,19 @@ data class WhatsAppMessage(
     val id: String,
     @Json(name = "thread_id") val threadId: String,
     val direction: String, // "inbound" or "outbound"
-    val kind: String, // "text", "template", "image", etc.
+    @Json(name = "type") val kind: String, // "text", "template", "image", etc.
     val text: String? = null,
     val status: String? = null, // "sent", "delivered", "read", "failed"
-    val timestamp: String
+    @Json(name = "created_at") val timestamp: String
 )
 
 data class WhatsAppSendMessageRequest(
     val kind: String = "text",
     val text: String
 )
+
+data class SendDirectRequest(val phone: String, val template_name: String, val template_language: String = "en")
+
+
+data class WhatsAppTemplate(val name: String, val language: String, val category: String? = null)
+data class WhatsAppTemplateListResponse(val data: List<WhatsAppTemplate>)

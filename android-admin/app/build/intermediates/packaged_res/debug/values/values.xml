@@ -7,5 +7,9 @@
     <string name="google_crash_reporting_api_key" translatable="false">AIzaSyCt8_IbBr3rfe-116gYzY8epqW9XVxmqQM</string>
     <string name="google_storage_bucket" translatable="false">northend-admin-app.firebasestorage.app</string>
     <string name="project_id" translatable="false">northend-admin-app</string>
-    <style name="Theme.NorthEndAdmin" parent="android:Theme.Material.Light.NoActionBar"/>
+    <style name="Theme.NorthEndAdmin" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+        <item name="android:statusBarColor">#075E54</item>
+        <item name="android:navigationBarColor">#000000</item>
+    </style>
 </resources>

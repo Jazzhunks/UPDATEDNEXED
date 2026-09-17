@@ -416,6 +416,50 @@ def build_whatsapp_router(db, require_super_admin_dep, on_inbound=None) -> APIRo
 
     # ---------- Templates ----------
     @router.get("/whatsapp/templates")
+    
+    class SendDirectIn(BaseModel):
+        phone: str
+        template_name: str
+        template_language: str
+        components: list = []
+
+    @router.post("/whatsapp/send-direct")
+    async def send_direct(req: SendDirectIn, _user=Depends(require_super_admin_dep)):
+        token = _cfg("WHATSAPP_ACCESS_TOKEN")
+        phone_id = _cfg("WHATSAPP_PHONE_NUMBER_ID")
+        if not token or not phone_id:
+            raise HTTPException(500, "WhatsApp credentials not configured")
+            
+        clean_phone = "".join(filter(str.isdigit, req.phone))
+        payload = {
+            "messaging_product": "whatsapp",
+            "to": clean_phone,
+            "type": "template",
+            "template": {
+                "name": req.template_name,
+                "language": {"code": req.template_language},
+                "components": req.components
+            }
+        }
+        
+        url = f"https://graph.facebook.com/{VERSION}/{phone_id}/messages"
+        async with httpx.AsyncClient(timeout=10) as client:
+            resp = await client.post(url, headers={"Authorization": f"Bearer {token}"}, json=payload)
+            
+        if resp.status_code >= 400:
+            try:
+                err = resp.json()
+            except Exception:
+                err = {"raw": resp.text}
+            raise HTTPException(resp.status_code, err)
+            
+        # Ensure a thread exists for this contact so they appear in the inbox
+        contact = await _upsert_contact(clean_phone, "Unknown")
+        thread = await _upsert_thread(contact, f"Started chat with template: {req.template_name}", "outbound", now_iso())
+        
+        return {"status": "success", "thread": thread}
+
+
     async def list_templates(_user=Depends(require_super_admin_dep)):
         token = _cfg("WHATSAPP_ACCESS_TOKEN")
         waba_id = _cfg("WHATSAPP_BUSINESS_ACCOUNT_ID")
