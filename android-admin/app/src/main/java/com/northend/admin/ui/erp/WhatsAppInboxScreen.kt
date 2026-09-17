@@ -1,5 +1,9 @@
 package com.northend.admin.ui.erp
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import kotlinx.coroutines.delay
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -40,12 +44,14 @@ fun WhatsAppInboxScreen(viewModel: WhatsAppViewModel = hiltViewModel()) {
     var lastTopThreadId by remember { mutableStateOf<String?>(null) }
     var lastPreview by remember { mutableStateOf<String?>(null) }
     
+    var topNotification by remember { mutableStateOf<String?>(null) }
+    
     LaunchedEffect(state.threads) {
         val topThread = state.threads.firstOrNull()
         if (topThread != null) {
             if (lastTopThreadId != null && (topThread.id != lastTopThreadId || topThread.lastMessagePreview != lastPreview)) {
                 if (topThread.id != state.currentThread?.id) {
-                    android.widget.Toast.makeText(context, "New message from ${topThread.contactName ?: topThread.phone}", android.widget.Toast.LENGTH_LONG).show()
+                    topNotification = "New message from ${topThread.contactName ?: topThread.phone}"
                 }
             }
             lastTopThreadId = topThread.id
@@ -53,8 +59,18 @@ fun WhatsAppInboxScreen(viewModel: WhatsAppViewModel = hiltViewModel()) {
         }
     }
 
+    LaunchedEffect(topNotification) {
+        if (topNotification != null) {
+            delay(3000)
+            topNotification = null
+        }
+    }
 
-    if (state.currentThread == null) {
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            if (state.currentThread == null) {
+
         // THREAD LIST
         Scaffold(
             modifier = Modifier.imePadding().systemBarsPadding(),
@@ -97,6 +113,32 @@ fun WhatsAppInboxScreen(viewModel: WhatsAppViewModel = hiltViewModel()) {
             onSend = { viewModel.sendMessage(it) }
         )
     }
+
+    
+        } // End of Column
+
+        // Custom Top Notification Banner
+        AnimatedVisibility(
+            visible = topNotification != null,
+            enter = slideInVertically(initialOffsetY = { -it }),
+            exit = slideOutVertically(targetOffsetY = { -it }),
+            modifier = Modifier.align(Alignment.TopCenter).padding(top = 40.dp).padding(horizontal = 16.dp)
+        ) {
+            Surface(
+                color = WhatsAppTeal,
+                shape = RoundedCornerShape(8.dp),
+                shadowElevation = 8.dp,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = topNotification ?: "",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+        }
+    } // End of Box
 
     if (showNewChatDialog) {
         var phone by remember { mutableStateOf("") }
